@@ -2,12 +2,11 @@ import pygame
 from .settings import BLACK, ROWS, SQUARE_SIZE, GREY, WHITE, COLS
 from .player import Player
 
-
 class Board:
     def __init__(self):
         self.board = []
         self.selected_player = None
-        self.grey_player = self.white_player = 12
+        self.grey_player = self.white_player = 8
         self.grey_kings = self.white_kings = 0
         self.create_board()
     
@@ -38,3 +37,16 @@ class Board:
                 player = self.board[row][col]
                 if player != 0:
                     player.draw(win)
+
+    def get_player(self, row, col):
+        return self.board[row][col]
+    
+    def move(self, player, row, col):
+        self.board[player.row][player.col], self.board[row][col] = self.board[row][col], self.board[player.row][player.col]
+        player.move(row, col)
+        if row == ROWS - 1 or row == 0:
+            player.make_king()
+            if player.color == WHITE:
+                self.white_kings += 1
+            else:
+                self.grey_kings += 1 
