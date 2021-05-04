@@ -1,9 +1,9 @@
 import pygame
 from .settings import BLACK, ROWS, SQUARE_SIZE, GREY
 
-class Helper:
+class Player:
   PADDING = 10
-  BORDER = 2
+  OUTLINE = 2
 
   def __init__(self, row, col, color):
     self.row = row
