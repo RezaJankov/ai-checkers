@@ -5,7 +5,6 @@ from .player import Player
 class Board:
     def __init__(self):
         self.board = []
-        self.selected_player = None
         self.grey_player = self.white_player = 8
         self.grey_kings = self.white_kings = 0
         self.create_board()
@@ -50,3 +49,14 @@ class Board:
                 self.white_kings += 1
             else:
                 self.grey_kings += 1 
+
+    def get_valid_moves(self, piece):
+        moves = {}
+        left = player.col - 1
+        right = player.col + 1
+        row = player.row
+        if player.color == GREY or player.king:
+            pass
+        if player.color == WHITE or player.king:
+            pass
+        

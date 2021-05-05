@@ -1,6 +1,7 @@
 import pygame
 from game.settings import WIDTH, HEIGHT, SQUARE_SIZE, GREY, WHITE
 from game.board import Board
+from game.game import Game
 
 FPS = 60
 
@@ -10,7 +11,7 @@ pygame.display.set_caption('Checkers')
 def main():
     run = True
     clock = pygame.time.Clock()
-    board = Board()
+    game = Game(WIN)
   
     while run:
         clock.tick(FPS)
@@ -22,14 +23,10 @@ def main():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 pos = pygame.mouse.get_pos()
                 row, col = get_row_col_from_mouse(pos)
-                player = board.get_player(row, col)
-                board.move(player, 4, 3)
+                
         
-        board.draw(WIN)
-        pygame.display.update()
-    
+        game.update() 
     pygame.quit()
-
 main()
 
 def get_row_col_from_mouse(pos):
