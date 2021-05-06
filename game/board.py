@@ -50,13 +50,89 @@ class Board:
             else:
                 self.grey_kings += 1 
 
-    def get_valid_moves(self, piece):
+    def get_valid_moves(self, player):
         moves = {}
         left = player.col - 1
         right = player.col + 1
         row = player.row
         if player.color == GREY or player.king:
-            pass
+            moves.update(self._shift_left(row -1, max(row-3, -1), -1, player.color, left))
+            moves.update(self._shift_right(row -1, max(row-3, -1), -1, player.color, right))
         if player.color == WHITE or player.king:
-            pass
-        
+            moves.update(self._shift_left(row +1, min(row+3, ROWS), 1, player.color, left))
+            moves.update(self._shift_right(row +1, min(row+3, ROWS), 1, player.color, right))
+        return moves
+    
+    def _shift_left(self, start, stop, step, color, left, skipped=[]):
+        moves = {}
+        last = []
+        for r in range(start, stop, step):
+            if left < 0:
+                break
+            current = self.board[r][left]
+            if current == 0:
+                if skipped and not last:
+                    break
+                elif skipped:
+                    moves[(r, left)] = last + skipped
+                else:
+                    moves[(r, left)] = last
+                if last:
+                    if step == -1:
+                        row = max(r-3, 0)
+                    else:
+                        row = min(r+3, ROWS)
+                    moves.update(self._shift_left(r+step, row, step, color, left-1,skipped=last))
+                    moves.update(self._shift_right(r+step, row, step, color, left+1,skipped=last))
+                break
+            elif current.color == color:
+                break
+            else:
+                last = [current]
+            left -= 1
+        return moves
+
+    def _shift_right(self, start, stop, step, color, right, skipped=[]):
+        moves = {}
+        last = []
+        for r in range(start, stop, step):
+            if right >= COLS:
+                break
+            current = self.board[r][right]
+            if current == 0:
+                if skipped and not last:
+                    break
+                elif skipped:
+                    moves[(r,right)] = last + skipped
+                else:
+                    moves[(r, right)] = last
+                if last:
+                    if step == -1:
+                        row = max(r-3, 0)
+                    else:
+                        row = min(r+3, ROWS)
+                    moves.update(self._shift_left(r+step, row, step, color, right-1,skipped=last))
+                    moves.update(self._shift_right(r+step, row, step, color, right+1,skipped=last))
+                break
+            elif current.color == color:
+                break
+            else:
+                last = [current]
+            right += 1  
+        return moves
+
+    def remove(self, players):
+        for player in players:
+            self.board[player.row][player.col] = 0
+            if player != 0:
+                if player.color == GREY:
+                    self.grey_player -= 1
+                else:
+                    self.white_player -= 1
+
+    def winner(self):
+        if self.grey_player <= 0:
+            return WHITE
+        elif self.white_player <= 0:
+            return GREY
+        return None
