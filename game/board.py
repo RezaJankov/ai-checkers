@@ -9,6 +9,17 @@ class Board:
         self.grey_kings = self.white_kings = 0
         self.create_board()
     
+    def evaluate(self):
+        return self.white_player - self.grey_player + (self.white_kings * 0.5 - self.grey_kings * 0.5)
+
+    def get_all_players(self, color):
+        players = []
+        for row in self.board:
+            for player in row:
+                if player != 0 and player.color == color:
+                    players.append(player)
+        return players
+    
     def draw_squares(self, win):
         win.fill(BLACK)
         for row in range(ROWS):
@@ -135,4 +146,4 @@ class Board:
             return WHITE
         elif self.white_player <= 0:
             return GREY
-        return None
+        return None 
